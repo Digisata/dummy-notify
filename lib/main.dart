@@ -14,14 +14,13 @@ Future<void> main() async {
 
   final fcmToken = await FirebaseMessaging.instance.getToken();
   print("FCMToken $fcmToken");
-  await FirebaseInAppMessaging.instance.triggerEvent("");
 
   //Remove this method to stop OneSignal Debugging
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
   OneSignal.shared.setAppId("c004f9e0-925c-4d12-99c5-51949c5c9a27");
 
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
     print("Accepted permission: $accepted");
   });
@@ -37,7 +36,12 @@ Future<void> main() async {
       .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
     // Will be called whenever a notification is opened/button pressed.
     print("OneSignal: notification action: ${result.action?.type}");
-    print("OneSignal: notification payload: ${result.notification.jsonRepresentation()}");
+    print(
+        "OneSignal: notification payload: ${result.notification.jsonRepresentation()}");
+  });
+
+  OneSignal.shared.setInAppMessageClickedHandler((OSInAppMessageAction action) {
+    print('OneSignal: IAM clicked action: ${action.jsonRepresentation()}');
   });
 
   OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
